@@ -36,10 +36,10 @@ namespace AspNetCoreRazor
             .AddOpenIdConnect(options =>
             {
                 options.Authority = "https://localhost:7180"; // L'URL de votre fournisseur d'OpenID Connect
-                options.ClientId = "AspNetCoreApi_clientId"; //  Configuration["Authentication:OIDC:ClientId"];
+                options.ClientId = "AspNetCoreApi_clientId_2"; //  Configuration["Authentication:OIDC:ClientId"];
                 options.ClientSecret = "AspNetCoreApi_secret"; // Configuration["Authentication:OIDC:ClientSecret"];
                 options.ResponseType = "code"; // Utilisation du flux de code d'autorisation
-                options.SaveTokens = true; // Enregistrer les jetons pour une utilisation ultérieure
+                options.SaveTokens = false; // true; // Enregistrer les jetons pour une utilisation ultérieure
 
                 //options.Configuration = new Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectConfiguration
                 //{
@@ -55,7 +55,7 @@ namespace AspNetCoreRazor
                     ValidateIssuer = true,
                     ValidIssuer = "https://localhost:7180",
                     ValidateAudience = true,
-                    ValidAudience = "AspNetCoreApi_clientId",
+                    ValidAudience = "AspNetCoreApi_clientId_3",
                     ValidateLifetime = true
                 };
 
@@ -79,6 +79,11 @@ namespace AspNetCoreRazor
                         var result = JsonSerializer.Serialize(new { error = context.Exception.Message });
                         return context.Response.WriteAsync(result);
                     }
+                    //,
+                    //OnAuthorizationCodeReceived = context =>
+                    //{
+                    //    return Task.FromResult(new AuthorizationCodeReceivedContext(context)); // utilisé par HandleRemoteAuthenticateAsync() de OpenIdConnectHandler
+                    //}
                 };
             });
 
