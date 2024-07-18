@@ -19,9 +19,10 @@ namespace AspNetInfra
             desc.Url = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
 
             // Query String
+            var splits = new string[] { "\r", "\u0026" };
             if (request.QueryString.HasValue)
             {
-                desc.QueryStrings.AddRange(request.QueryString.Value.Split("\r").ToList());
+                desc.QueryStrings.AddRange(request.QueryString.Value.Split(splits, StringSplitOptions.None).ToList());
             }
 
             // Headers
