@@ -37,11 +37,11 @@ namespace AspNetCoreApi.Controllers
         {
             var openIdConfig = new OpenIdConfiguration
             {
-                issuer = "https://localhost:7180?test=222", //L'URL de votre serveur OpenID Connect.
-                authorization_endpoint = "https://localhost:7180/connect/authorize", // L'URL pour l'authentification (où les utilisateurs se connectent).
-                token_endpoint = "https://localhost:7180/connect/token", // L'URL pour échanger le code d'autorisation contre un token d'accès et un token d'identité. 
-                userinfo_endpoint = "https://localhost:7180/connect/userinfo", //  L'URL pour obtenir des informations sur l'utilisateur connecté.
-                jwks_uri = "https://localhost:7180/.well-known/jwks.json", // L'URL pour obtenir les clés publiques utilisées pour vérifier les tokens JWT.
+                issuer = Config.Appli_URL, //L'URL de votre serveur OpenID Connect.
+                authorization_endpoint = $"{Config.Appli_URL}/connect/authorize", // L'URL pour l'authentification (où les utilisateurs se connectent).
+                token_endpoint = $"{Config.Appli_URL}/connect/token", // L'URL pour échanger le code d'autorisation contre un token d'accès et un token d'identité. 
+                userinfo_endpoint = $"{Config.Appli_URL}/connect/userinfo", //  L'URL pour obtenir des informations sur l'utilisateur connecté.
+                jwks_uri = $"{Config.Appli_URL}/.well-known/jwks.json", // L'URL pour obtenir les clés publiques utilisées pour vérifier les tokens JWT.
 
                 response_types_supported = new[] { "code", "token", "id_token", "code id_token", "code token", "id_token token", "code id_token token" },
                 subject_types_supported = new[] { "public" },

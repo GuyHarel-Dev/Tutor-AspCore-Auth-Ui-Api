@@ -38,7 +38,7 @@ namespace AspNetCoreRazor.Pages
         {
             HttpRequestMessage request = new HttpRequestMessage(
                 HttpMethod.Get,
-                "https://localhost:7180/WeatherForecast")
+                $"{Config.OpenIdApi_URL}/WeatherForecast")
             {
                 Headers =
                 {

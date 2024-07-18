@@ -35,8 +35,8 @@ namespace AspNetCoreRazor
             .AddCookie()
             .AddOpenIdConnect(options =>
             {
-                options.Authority = "https://localhost:7180"; // L'URL de votre fournisseur d'OpenID Connect
-                options.ClientId = "AspNetCoreApi_clientId_2"; //  Configuration["Authentication:OIDC:ClientId"];
+                options.Authority = Config.OpenIdApi_URL; // L'URL de votre fournisseur d'OpenID Connect
+                options.ClientId = "AspNetCoreApi_clientId"; //  Configuration["Authentication:OIDC:ClientId"];
                 options.ClientSecret = "AspNetCoreApi_secret"; // Configuration["Authentication:OIDC:ClientSecret"];
                 options.ResponseType = "code"; // Utilisation du flux de code d'autorisation
                 options.SaveTokens = false; // true; // Enregistrer les jetons pour une utilisation ultérieure
@@ -53,9 +53,9 @@ namespace AspNetCoreRazor
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = "https://localhost:7180",
+                    ValidIssuer = Config.OpenIdApi_URL,
                     ValidateAudience = true,
-                    ValidAudience = "AspNetCoreApi_clientId_3",
+                    ValidAudience = "AspNetCoreApi_clientId",
                     ValidateLifetime = true
                 };
 

@@ -52,7 +52,7 @@ namespace AspNetCoreRazor.Pages
 
         //    HttpRequestMessage request = new HttpRequestMessage(
         //        HttpMethod.Post,
-        //        "https://localhost:7180/api/jwt/obtenir-token")
+        //        $"{Config.OpenIdApi_URL}/api/jwt/obtenir-token")
         //    {
         //        Content = data
         //    };

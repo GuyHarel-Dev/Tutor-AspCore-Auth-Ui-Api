@@ -14,7 +14,7 @@ namespace AspNetCoreApi.Controllers
     {
         private const String secretKey128Bits = "6b9d5e8f3a4b2c1d0e6f7a8b9c0d1e2f3b4c5d6e7f8a9b0c1d2e3f4g5h6i7j8k";
 
-        private readonly RSA _rsa;
+        //private readonly RSA _rsa;
         private readonly string _kid = "12345"; // Identifiant de la clé (kid)
 
         [Route("token")]
@@ -169,6 +169,7 @@ namespace AspNetCoreApi.Controllers
             };
 
             // Génération de la paire de clés RSA
+            RSA _rsa = RSA.Create(2048);
             var key = new RsaSecurityKey(_rsa)
             {
                 KeyId = _kid
@@ -177,8 +178,8 @@ namespace AspNetCoreApi.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
 
             var token = new JwtSecurityToken(
-                issuer: "https://localhost:7180?test=111",
-                audience: "AspNetCoreApi_clientId_1",
+                issuer: Config.Appli_URL, 
+                audience: "AspNetCoreApi_clientId",
                 claims: claims,
                 expires: DateTime.Now.AddHours(1),
                 signingCredentials: creds);
@@ -203,8 +204,8 @@ namespace AspNetCoreApi.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: "https://localhost:7180?test=111",
-                audience: "AspNetCoreApi_clientId_1",
+                issuer: Config.Appli_URL,
+                audience: "AspNetCoreApi_clientId",
                 claims: claims,
                 expires: DateTime.Now.AddHours(1),
                 signingCredentials: creds);
