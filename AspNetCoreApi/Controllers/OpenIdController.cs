@@ -38,7 +38,6 @@ namespace AspNetCoreApi.Controllers
         {
             logger.LogInformation($"{nameof(OnGetOpenIdConfig)}: { HttpHelper.Desc(Request)}");
 
-
             var openIdConfig = new OpenIdConfiguration
             {
                 issuer = Config.Appli_URL, //L'URL de votre serveur OpenID Connect.
@@ -60,6 +59,8 @@ namespace AspNetCoreApi.Controllers
         [HttpGet("jwks.json")]
         public IActionResult GetJwks()
         {
+            logger.LogInformation($"{nameof(GetJwks)}: {HttpHelper.Desc(Request)}");
+
             var parameters = _rsa.ExportParameters(false);
 
             var jwks = new Jwks

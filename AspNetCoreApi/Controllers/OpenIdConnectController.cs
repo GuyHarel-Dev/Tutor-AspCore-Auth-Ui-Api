@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AspNetInfra;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,15 +14,24 @@ namespace AspNetCoreApi.Controllers
     [ApiController]
     public class OpenIdConnectController : ControllerBase
     {
+        private readonly ILogger<OpenIdConnectController> logger;
+
         private const String secretKey128Bits = "6b9d5e8f3a4b2c1d0e6f7a8b9c0d1e2f3b4c5d6e7f8a9b0c1d2e3f4g5h6i7j8k";
 
         //private readonly RSA _rsa;
         private readonly string _kid = "12345"; // Identifiant de la clé (kid)
 
+        public OpenIdConnectController(ILogger<OpenIdConnectController> logger)
+        {
+            this.logger = logger;
+        }
+
         [Route("token")]
         [HttpPost]
         public IActionResult Token()
         {
+            logger.LogInformation($"{nameof(Token)}: {HttpHelper.Desc(Request)}");
+
             // Valider la requète: client client_id, le client_secret, le grant_type, le code (authorisation code flow)
 
             // Si valide, retourner un token
@@ -69,33 +80,18 @@ namespace AspNetCoreApi.Controllers
             return Ok(reponse);
         }
 
-        private bool ValidateClient(string clientId, string clientSecret)
-        {
-            // Implement your client validation logic here
-            // This is just a simple example
-            return true;
-            //return clientId == "AspNetCoreApi_clientId" && clientSecret == "AspNetCoreApi_secret";
-        }
-
-        private bool ValidateAuthorizationCode(string code)
-        {
-            // Implement your authorization code validation logic here
-            // This is just a simple example
-            //return code == "valid_authorization_code";
-
-            return true;
-        }
-
-
         [Route("userinfo")]
         public IActionResult UserInfo()
         {
+            logger.LogInformation($"{nameof(UserInfo)}: {HttpHelper.Desc(Request)}");
             return Ok();
         }
 
-            [Route("authorize")]
+        [Route("authorize")]
         public IActionResult Authorize()
         {
+            logger.LogInformation($"{nameof(Authorize)}: {HttpHelper.Desc(Request)}");
+
             var queryParameters = Request.Query;
 
             // Extract query parameters
@@ -128,6 +124,24 @@ namespace AspNetCoreApi.Controllers
             var responseUrl = $"{redirectUri}?code={authorizationCode}&state={state}";
 
             return new RedirectResult(responseUrl);
+
+        }
+
+        private bool ValidateClient(string clientId, string clientSecret)
+        {
+            // Implement your client validation logic here
+            // This is just a simple example
+            return true;
+            //return clientId == "AspNetCoreApi_clientId" && clientSecret == "AspNetCoreApi_secret";
+        }
+
+        private bool ValidateAuthorizationCode(string code)
+        {
+            // Implement your authorization code validation logic here
+            // This is just a simple example
+            //return code == "valid_authorization_code";
+
+            return true;
 
         }
 
@@ -183,7 +197,7 @@ namespace AspNetCoreApi.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
 
             var token = new JwtSecurityToken(
-                issuer: Config.Appli_URL, 
+                issuer: Config.Appli_URL,
                 audience: "AspNetCoreApi_clientId",
                 claims: claims,
                 expires: DateTime.Now.AddHours(1),
