@@ -87,8 +87,13 @@ namespace AspNetCoreApi.Controllers
         }
 
 
+        [Route("userinfo")]
+        public IActionResult UserInfo()
+        {
+            return Ok();
+        }
 
-        [Route("authorize")]
+            [Route("authorize")]
         public IActionResult Authorize()
         {
             var queryParameters = Request.Query;
