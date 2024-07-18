@@ -8,7 +8,11 @@ namespace AspNetInfra
 {
     public static class HttpHelper
     {
-        public static string Desc(HttpRequest request)
+        public static string JsonToString(object obj)
+        {
+            return JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+        }
+        public static string RequestToString(HttpRequest request)
         {
             var desc = new HttpDesc();
 

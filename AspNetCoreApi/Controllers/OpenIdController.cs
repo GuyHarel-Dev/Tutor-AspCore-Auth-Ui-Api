@@ -36,7 +36,7 @@ namespace AspNetCoreApi.Controllers
         [HttpGet]
         public IActionResult OnGetOpenIdConfig()
         {
-            logger.LogInformation($"{nameof(OnGetOpenIdConfig)}: { HttpHelper.Desc(Request)}");
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} Request: { HttpHelper.RequestToString(Request)}");
 
             var openIdConfig = new OpenIdConfiguration
             {
@@ -53,13 +53,15 @@ namespace AspNetCoreApi.Controllers
                 token_endpoint_auth_methods_supported = new[] { "client_secret_basic", "client_secret_post" }
             };
 
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} reponse: {HttpHelper.JsonToString(openIdConfig)}");
+
             return new JsonResult(openIdConfig);
         }
 
         [HttpGet("jwks.json")]
         public IActionResult GetJwks()
         {
-            logger.LogInformation($"{nameof(GetJwks)}: {HttpHelper.Desc(Request)}");
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GetJwks)} Request: {HttpHelper.RequestToString(Request)}");
 
             var parameters = _rsa.ExportParameters(false);
 
@@ -78,6 +80,8 @@ namespace AspNetCoreApi.Controllers
                 }
             }
             };
+
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} reponse: {HttpHelper.JsonToString(jwks)}");
 
             return new JsonResult(jwks);
         }

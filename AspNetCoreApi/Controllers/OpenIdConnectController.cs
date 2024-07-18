@@ -30,7 +30,7 @@ namespace AspNetCoreApi.Controllers
         [HttpPost]
         public IActionResult Token()
         {
-            logger.LogInformation($"{nameof(Token)}: {HttpHelper.Desc(Request)}");
+            logger.LogInformation($"{nameof(OpenIdConnectController)}/{nameof(Token)} Request: {HttpHelper.RequestToString(Request)}");
 
             // Valider la requète: client client_id, le client_secret, le grant_type, le code (authorisation code flow)
 
@@ -76,6 +76,8 @@ namespace AspNetCoreApi.Controllers
                 id_token = token_id
             };
 
+            logger.LogInformation($"{nameof(OpenIdConnectController)}/{nameof(Token)} reponse: {HttpHelper.JsonToString(reponse)}");
+
             // Return the token response
             return Ok(reponse);
         }
@@ -83,14 +85,14 @@ namespace AspNetCoreApi.Controllers
         [Route("userinfo")]
         public IActionResult UserInfo()
         {
-            logger.LogInformation($"{nameof(UserInfo)}: {HttpHelper.Desc(Request)}");
+            logger.LogInformation($"{nameof(OpenIdConnectController)}/{nameof(UserInfo)}: {HttpHelper.RequestToString(Request)}");
             return Ok();
         }
 
         [Route("authorize")]
         public IActionResult Authorize()
         {
-            logger.LogInformation($"{nameof(Authorize)}: {HttpHelper.Desc(Request)}");
+            logger.LogInformation($"{nameof(OpenIdConnectController)}/{nameof(Authorize)} Request: {HttpHelper.RequestToString(Request)}");
 
             var queryParameters = Request.Query;
 
@@ -122,6 +124,8 @@ namespace AspNetCoreApi.Controllers
 
             // Construct the response URL
             var responseUrl = $"{redirectUri}?code={authorizationCode}&state={state}";
+
+            logger.LogInformation($"{nameof(OpenIdConnectController)}/{nameof(Authorize)} reponse: {HttpHelper.JsonToString(responseUrl)}");
 
             return new RedirectResult(responseUrl);
 
