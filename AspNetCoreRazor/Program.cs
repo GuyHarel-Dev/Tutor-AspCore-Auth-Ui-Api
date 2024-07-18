@@ -21,16 +21,23 @@ namespace AspNetCoreRazor
             builder.Services.AddRazorPages();
 
             // Pour les test de Jwt
-            builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient("nom_du_http_client", 
+                o => 
+                { 
+                    o.Timeout = new TimeSpan(1, 1, 1); 
+                });
             builder.Services.AddLogging();
             builder.Services.AddSingleton<JwtTokenTest>(new JwtTokenTest());
 
             // Ajouter OpenID (qui contient Oauth 2.0)
+
+            // v1:
+
             builder.Services.AddAuthentication(o =>
-                {
-                    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    o.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                }
+            {
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            }
             )
             .AddCookie()
             .AddOpenIdConnect(options =>
@@ -104,13 +111,11 @@ namespace AspNetCoreRazor
                 IdentityModelEventSource.ShowPII = true;
             }
 
-                app.UseAuthentication();
-
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapRazorPages();

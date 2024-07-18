@@ -1,0 +1,41 @@
+﻿using Microsoft.AspNetCore.Http;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+
+namespace AspNetInfra
+{
+    public static class HttpHelper
+    {
+        public static string Desc(HttpRequest request)
+        {
+            var desc = new HttpDesc();
+
+            desc.Url = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
+
+            // Query String
+            if (request.QueryString.HasValue)
+            {
+                desc.QueryStrings.AddRange(request.QueryString.Value.Split("\r").ToList());
+            }
+
+            // Headers
+            foreach (var header in request.Headers)
+            {
+                desc.Headers.Add($"{header.Key}: {header.Value}");
+            }
+
+            // Body
+
+            return JsonSerializer.Serialize(desc, new JsonSerializerOptions { WriteIndented = true});
+        }
+    }
+
+    public class HttpDesc
+    {
+        public string Url { get; set; }
+        public List<string> Headers { get; set; } = new List<string>();
+        public List<string> QueryStrings { get; set; }
+    }
+
+}

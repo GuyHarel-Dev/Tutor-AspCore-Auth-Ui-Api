@@ -143,13 +143,13 @@ namespace AspNetCoreApi.Controllers
             {
             new Claim(JwtRegisteredClaimNames.Sub, clientId),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                           new Claim(JwtRegisteredClaimNames.Website, "test_2"),
+            new Claim(JwtRegisteredClaimNames.Website, "test_2"),
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey128Bits));
+            key.KeyId = "222333444";
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            key.KeyId = "222333444";
 
             var token = new JwtSecurityToken(
                 issuer: "your_issuer",

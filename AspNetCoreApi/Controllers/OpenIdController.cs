@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AspNetInfra;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +36,9 @@ namespace AspNetCoreApi.Controllers
         [HttpGet]
         public IActionResult OnGetOpenIdConfig()
         {
+            logger.LogInformation($"{nameof(OnGetOpenIdConfig)}: { HttpHelper.Desc(Request)}");
+
+
             var openIdConfig = new OpenIdConfiguration
             {
                 issuer = Config.Appli_URL, //L'URL de votre serveur OpenID Connect.
