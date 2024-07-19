@@ -5,43 +5,44 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace AspNetCoreApi.Controllers
 {
     [Route(".well-known")]
     [ApiController]
-    public class OpenIdController : ControllerBase
+    public partial class OpenIdController : ControllerBase
     {
         private readonly ILogger<OpenIdController> logger;
-        private static RSA _rsa;
+        //private static RSA _rsa;
+        private readonly RSACryptoServiceProvider _rsaProvider;
+        private readonly RSAParameters _rsaParameters;
+        private const String secretKey128Bits = "6b9d5e8f3a4b2c1d0e6f7a8b9c0d1e2f3b4c5d6e7f8a9b0c1d2e3f4g5h6i7j8k";
+
         //private static RsaSecurityKey _rsaKey;
 
         public OpenIdController(ILogger<OpenIdController> logger)
         {
             this.logger = logger;
 
-            _rsa = RSA.Create(2048);
-            //_rsaKey = new RsaSecurityKey(_rsa)
-            //{
-            //    KeyId =  "0f90bf18-fcb5-4ac5-966e-dc615bec7bc1" //  Guid.NewGuid().ToString()
-            //};
-        }
+            // Initialisation des clés RSA
+            _rsaProvider = new RSACryptoServiceProvider(2048); // génération de la clef privé et publique
+            _rsaParameters = _rsaProvider.ExportParameters(true);
 
-        public IActionResult OnGet()
-        {
-            return new JsonResult(new { status = "je suis on get de /openid" });
+            //logger.LogInformation($"{nameof(OpenIdController)}/ctor _rsaProvider: {JsonSerializer.Serialize(_rsaProvider)}");
+            //logger.LogInformation($"{nameof(OpenIdController)}/ctor _rsaParameters: {JsonSerializer.Serialize(_rsaParameters)}");
         }
 
         [Route("openid-configuration")]
         [HttpGet]
         public IActionResult OnGetOpenIdConfig()
         {
-            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} Request: { HttpHelper.RequestToString(Request)}");
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} Request: {HttpHelper.RequestToString(Request)}");
 
             var openIdConfig = new OpenIdConfiguration
             {
                 issuer = Config.Appli_URL, //L'URL de votre serveur OpenID Connect.
-                authorization_endpoint = $"{Config.Appli_URL}/connect/authorize", // L'URL pour l'authentification (où les utilisateurs se connectent).
+                authorization_endpoint = $"{Config.Appli_URL}/.well-known/authorize", // L'URL pour l'authentification (où les utilisateurs se connectent).
                 token_endpoint = $"{Config.Appli_URL}/connect/token", // L'URL pour échanger le code d'autorisation contre un token d'accès et un token d'identité. 
                 userinfo_endpoint = $"{Config.Appli_URL}/connect/userinfo", //  L'URL pour obtenir des informations sur l'utilisateur connecté.
                 jwks_uri = $"{Config.Appli_URL}/.well-known/jwks.json", // L'URL pour obtenir les clés publiques utilisées pour vérifier les tokens JWT.
@@ -58,42 +59,15 @@ namespace AspNetCoreApi.Controllers
             return new JsonResult(openIdConfig);
         }
 
-        [HttpGet("jwks.json")]
-        public IActionResult GetJwks()
+    
+
+        public IActionResult OnGet()
         {
-            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GetJwks)} Request: {HttpHelper.RequestToString(Request)}");
-
-            var parameters = _rsa.ExportParameters(false);
-
-            var jwks = new Jwks
-            {
-                Keys = new List<JwksKey>
-            {
-                new JwksKey
-                {
-                    Kty = "RSA",
-                    Use = "sig",
-                    Kid = "112233", // _rsaKey.KeyId, //Guid.NewGuid().ToString(), // "your-key-id",
-                    Alg = "RS256",
-                    N = Base64UrlEncode(parameters.Modulus), // "your-modulus-base64-url-encoded",
-                    E = Base64UrlEncode(parameters.Exponent) //"your-exponent-base64-url-encoded"
-                }
-            }
-            };
-
-            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} reponse: {HttpHelper.JsonToString(jwks)}");
-
-            return new JsonResult(jwks);
+            return new JsonResult(new { status = "je suis on get de /openid" });
         }
 
-        private static string Base64UrlEncode(byte[] input)
-        {
-           var output = Convert.ToBase64String(input);
-            //output = output.Split('=')[0]; // Remove any trailing '='s
-            //output = output.Replace('+', '-'); // 62nd char of encoding
-            //output = output.Replace('/', '_'); // 63rd char of encoding
-            return output;
-        }
+    
+
 
     }
 }
