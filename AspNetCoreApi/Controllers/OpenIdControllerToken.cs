@@ -68,7 +68,7 @@ namespace AspNetCoreApi.Controllers
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("sub", "1234567890"), new Claim("name", "John Doe") }),
                 Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new RsaSecurityKey(OpenIdConfig._rsaParameters), SecurityAlgorithms.RsaSha256)
+                SigningCredentials = new SigningCredentials(new RsaSecurityKey(_rsaParameters), SecurityAlgorithms.RsaSha256)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -106,10 +106,10 @@ namespace AspNetCoreApi.Controllers
                     new Claim(JwtRegisteredClaimNames.Email, "johndoe@example.com"),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
                     new Claim(JwtRegisteredClaimNames.Aud, clientId),
-                    new Claim(JwtRegisteredClaimNames.Iss, AspNetInfra.OpenIdConfig.TokenIssuer)
+                    new Claim(JwtRegisteredClaimNames.Iss, Config.Appli_URL)
                 };
 
-            var rsaSecurityKey = new RsaSecurityKey(OpenIdConfig._rsaParameters)
+            var rsaSecurityKey = new RsaSecurityKey(_rsaParameters)
             {
                 KeyId = "112233"
             };

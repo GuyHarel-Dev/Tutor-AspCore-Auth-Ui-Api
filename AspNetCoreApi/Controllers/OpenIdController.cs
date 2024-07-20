@@ -15,10 +15,14 @@ namespace AspNetCoreApi.Controllers
     {
         private readonly ILogger<OpenIdController> logger;
 
+        private readonly RSACryptoServiceProvider _rsaProvider;
+        private readonly RSAParameters _rsaParameters;
+
         public OpenIdController(ILogger<OpenIdController> logger)
        {
             this.logger = logger;
-
+            _rsaProvider = new RSACryptoServiceProvider(2048); // génération de la clef privé et publique
+            _rsaParameters = _rsaProvider.ExportParameters(true);
         }
 
         [Route("openid-configuration")]
@@ -27,7 +31,7 @@ namespace AspNetCoreApi.Controllers
         {
             logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} Request: {HttpHelper.RequestToString(Request)}");
 
-            var issuer = OpenIdConfig.TokenIssuer;
+            var issuer = Config.Appli_URL;
 
             var openIdConfig = new OpenIdConfiguration
             {
