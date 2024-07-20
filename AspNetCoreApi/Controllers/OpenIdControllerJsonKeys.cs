@@ -28,8 +28,8 @@ namespace AspNetCoreApi.Controllers
                 }
             };
 
-            //logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GetJwks)} parameters: {HttpHelper.JsonToString(_rsaParameters)}");
-            //logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GetJwks)} reponse: {HttpHelper.JsonToString(jwks)}");
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GetJwks)} parameters: {HttpHelper.JsonToString(OpenIdConfig._rsaParameters)}");
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GetJwks)} reponse: {HttpHelper.JsonToString(jwks)}");
 
             return new JsonResult(jwks);
         }

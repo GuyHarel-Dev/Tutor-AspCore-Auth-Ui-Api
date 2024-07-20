@@ -47,10 +47,10 @@ namespace AspNetCoreRazor
                 options.ResponseType = "code"; // Utilisation du flux de code d'autorisation
                 options.SaveTokens = false; // true; // Enregistrer les jetons pour une utilisation ultérieure
 
-                //options.Configuration = new Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectConfiguration
-                //{
-                //    AuthorizationEndpoint = "https://localhost:7180"
-                //};
+                options.Configuration = new Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectConfiguration
+                {
+                    AuthorizationEndpoint = "https://localhost:7180"
+                };
 
                 //options.ForwardChallenge = CookieAuthenticationDefaults.AuthenticationScheme;
 
