@@ -20,19 +20,18 @@ namespace AspNetCoreRazor
             // Add services to the container.
             builder.Services.AddRazorPages();
 
-            // Pour les test de Jwt
-            builder.Services.AddHttpClient("nom_du_http_client", 
-                o => 
-                { 
-                    o.Timeout = new TimeSpan(1, 1, 1); 
-                });
             builder.Services.AddLogging();
             builder.Services.AddSingleton<JwtTokenTest>(new JwtTokenTest());
 
+            // Configure le délai pour les HTTPClient des middleware
+
+            builder.Services.AddHttpClient("DefaultClient")
+                .ConfigureHttpClient(client =>
+                {
+                    client.Timeout = TimeSpan.FromHours(2);
+                });
+
             // Ajouter OpenID (qui contient Oauth 2.0)
-
-            // v1:
-
             builder.Services.AddAuthentication(o =>
             {
                 o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

@@ -43,8 +43,8 @@ namespace AspNetCoreApi.Controllers
             {
                 issuer = Config.Appli_URL, //L'URL de votre serveur OpenID Connect.
                 authorization_endpoint = $"{Config.Appli_URL}/.well-known/authorize", // L'URL pour l'authentification (où les utilisateurs se connectent).
-                token_endpoint = $"{Config.Appli_URL}/connect/token", // L'URL pour échanger le code d'autorisation contre un token d'accès et un token d'identité. 
-                userinfo_endpoint = $"{Config.Appli_URL}/connect/userinfo", //  L'URL pour obtenir des informations sur l'utilisateur connecté.
+                token_endpoint = $"{Config.Appli_URL}/.well-known/token", // L'URL pour échanger le code d'autorisation contre un token d'accès et un token d'identité. 
+                userinfo_endpoint = $"{Config.Appli_URL}/.well-known/userinfo", //  L'URL pour obtenir des informations sur l'utilisateur connecté.
                 jwks_uri = $"{Config.Appli_URL}/.well-known/jwks.json", // L'URL pour obtenir les clés publiques utilisées pour vérifier les tokens JWT.
 
                 response_types_supported = new[] { "code", "token", "id_token", "code id_token", "code token", "id_token token", "code id_token token" },

@@ -1,7 +1,8 @@
 ﻿using AspNetInfra;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+//using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,8 +40,8 @@ namespace AspNetCoreApi.Controllers
             var code = request["code"];
 
             // Generate the access token
-            var token = GenerateToken(clientId);
-            var token_id = GenerateIdToken(token);
+            var token = GenerateToken();
+            var token_id = GenerateIdToken(clientId);
 
 
             var reponse = new
@@ -54,15 +55,15 @@ namespace AspNetCoreApi.Controllers
             logger.LogInformation($"{nameof(OpenIdController)}/{nameof(Token)} reponse: {HttpHelper.JsonToString(reponse)}");
 
             // Return the token response
-            return Ok(reponse);
+            return new JsonResult(reponse);
         }
 
         // Pour signer un token JWT avec la clé privée:
 
-        private string GenerateToken(string clientId)
+        private string GenerateToken()
         {
             // Générer un token JWT
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = new JsonWebTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("sub", "1234567890"), new Claim("name", "John Doe") }),
@@ -71,32 +72,32 @@ namespace AspNetCoreApi.Controllers
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+            //var tokenString = tokenHandler.w
 
-            return tokenString;
+            return token;
         }
 
         // Pour valider un token JWT avec la clé publique
-        public void ValidateToken(string tokenString)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new RsaSecurityKey(_rsaParameters)
-            };
+        //public void ValidateToken(string tokenString)
+        //{
+        //    var tokenHandler = new JsonWebTokenHandler();
+        //    var validationParameters = new TokenValidationParameters
+        //    {
+        //        ValidateIssuer = false,
+        //        ValidateAudience = false,
+        //        ValidateLifetime = true,
+        //        ValidateIssuerSigningKey = true,
+        //        IssuerSigningKey = new RsaSecurityKey(_rsaParameters)
+        //    };
 
-            SecurityToken validatedToken;
-            var principal = tokenHandler.ValidateToken(tokenString, validationParameters, out validatedToken);
+        //    SecurityToken validatedToken;
+        //    var principal = tokenHandler.ValidateToken(tokenString, validationParameters, out validatedToken);
 
-        }
+        //}
 
         private string GenerateIdToken(string clientId)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = new JsonWebTokenHandler();
 
             var claims = new List<Claim>
                 {
@@ -108,17 +109,22 @@ namespace AspNetCoreApi.Controllers
                     new Claim(JwtRegisteredClaimNames.Iss, "https://your-authority-url")
                 };
 
+            var rsaSecurityKey = new RsaSecurityKey(_rsaParameters)
+            {
+                KeyId = "123"
+            };
+
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new RsaSecurityKey(_rsaParameters), SecurityAlgorithms.RsaSha256)
+                SigningCredentials = new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
 
-            return tokenString;
+            return token;
         }
     }
     //private string GenerateToken(string clientId)
