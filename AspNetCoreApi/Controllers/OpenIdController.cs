@@ -14,30 +14,18 @@ namespace AspNetCoreApi.Controllers
     public partial class OpenIdController : ControllerBase
     {
         private readonly ILogger<OpenIdController> logger;
-        //private static RSA _rsa;
-        private readonly RSACryptoServiceProvider _rsaProvider;
-        private readonly RSAParameters _rsaParameters;
-        private const String secretKey128Bits = "6b9d5e8f3a4b2c1d0e6f7a8b9c0d1e2f3b4c5d6e7f8a9b0c1d2e3f4g5h6i7j8k";
-
-        //private static RsaSecurityKey _rsaKey;
 
         public OpenIdController(ILogger<OpenIdController> logger)
-        {
+       {
             this.logger = logger;
 
-            // Initialisation des clés RSA
-            _rsaProvider = new RSACryptoServiceProvider(2048); // génération de la clef privé et publique
-            _rsaParameters = _rsaProvider.ExportParameters(true);
-
-            //logger.LogInformation($"{nameof(OpenIdController)}/ctor _rsaProvider: {JsonSerializer.Serialize(_rsaProvider)}");
-            //logger.LogInformation($"{nameof(OpenIdController)}/ctor _rsaParameters: {JsonSerializer.Serialize(_rsaParameters)}");
         }
 
         [Route("openid-configuration")]
         [HttpGet]
         public IActionResult OnGetOpenIdConfig()
         {
-            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} Request: {HttpHelper.RequestToString(Request)}");
+            //logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} Request: {HttpHelper.RequestToString(Request)}");
 
             var openIdConfig = new OpenIdConfiguration
             {
@@ -54,7 +42,7 @@ namespace AspNetCoreApi.Controllers
                 token_endpoint_auth_methods_supported = new[] { "client_secret_basic", "client_secret_post" }
             };
 
-            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} reponse: {HttpHelper.JsonToString(openIdConfig)}");
+            //logger.LogInformation($"{nameof(OpenIdController)}/{nameof(OnGetOpenIdConfig)} reponse: {HttpHelper.JsonToString(openIdConfig)}");
 
             return new JsonResult(openIdConfig);
         }

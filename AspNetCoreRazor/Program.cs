@@ -59,9 +59,9 @@ namespace AspNetCoreRazor
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = Config.OpenIdApi_URL,
+                    ValidIssuer = AspNetInfra.OpenIdConfig.TokenIssuer,
                     ValidateAudience = true,
-                    ValidAudience = "AspNetCoreApi_clientId",
+                    ValidAudience = AspNetInfra.OpenIdConfig.TokenAudience,
                     ValidateLifetime = true
                 };
 
