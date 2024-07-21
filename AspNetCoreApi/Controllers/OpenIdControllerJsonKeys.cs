@@ -22,14 +22,12 @@ namespace AspNetCoreApi.Controllers
                     Use = "sig",
                     Kid = "112233", // _rsaKey.KeyId, //Guid.NewGuid().ToString(), // "your-key-id",
                     Alg = "RS256",
-                    N = Base64UrlEncode(_rsaParameters.Modulus), // "your-modulus-base64-url-encoded",
-                    E = Base64UrlEncode(_rsaParameters.Exponent) //"your-exponent-base64-url-encoded"
+                    N = Base64UrlEncode(VouteClefRSA.RSAParameters.Modulus), // "your-modulus-base64-url-encoded",
+                    E = Base64UrlEncode(VouteClefRSA.RSAParameters.Exponent) //"your-exponent-base64-url-encoded"
                 }
                 }
             };
 
-            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GetJwks)} parameters: {HttpHelper.JsonToString(_rsaParameters)}");
-            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GetJwks)} reponse: {HttpHelper.JsonToString(jwks)}");
 
             return new JsonResult(jwks);
         }

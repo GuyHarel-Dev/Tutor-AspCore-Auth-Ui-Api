@@ -15,14 +15,12 @@ namespace AspNetCoreApi.Controllers
     {
         private readonly ILogger<OpenIdController> logger;
 
-        private readonly RSACryptoServiceProvider _rsaProvider;
-        private readonly RSAParameters _rsaParameters;
+
 
         public OpenIdController(ILogger<OpenIdController> logger)
        {
             this.logger = logger;
-            _rsaProvider = new RSACryptoServiceProvider(2048); // génération de la clef privé et publique
-            _rsaParameters = _rsaProvider.ExportParameters(true);
+
         }
 
         [Route("openid-configuration")]

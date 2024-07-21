@@ -68,11 +68,13 @@ namespace AspNetCoreApi.Controllers
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("sub", "1234567890"), new Claim("name", "John Doe") }),
                 Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new RsaSecurityKey(_rsaParameters), SecurityAlgorithms.RsaSha256)
+                SigningCredentials = new SigningCredentials(new RsaSecurityKey(VouteClefRSA.RSAParameters), SecurityAlgorithms.RsaSha256)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             //var tokenString = tokenHandler.w
+
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GenerateToken)} token: {HttpHelper.JsonToString(token)}");
 
             return token;
         }
@@ -109,7 +111,7 @@ namespace AspNetCoreApi.Controllers
                     new Claim(JwtRegisteredClaimNames.Iss, Config.Appli_URL)
                 };
 
-            var rsaSecurityKey = new RsaSecurityKey(_rsaParameters)
+            var rsaSecurityKey = new RsaSecurityKey(VouteClefRSA.RSAParameters)
             {
                 KeyId = "112233"
             };
@@ -123,6 +125,8 @@ namespace AspNetCoreApi.Controllers
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            logger.LogInformation($"{nameof(OpenIdController)}/{nameof(GenerateIdToken)} token: {HttpHelper.JsonToString(token)}");
 
             return token;
         }
