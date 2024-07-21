@@ -41,7 +41,7 @@ namespace AspNetCoreApi.Controllers
 
             // Generate the access token
             var token = GenerateToken();
-            var token_id = GenerateIdToken(clientId);
+            var token_id = GenerateIdToken(clientId, StaticNonce);
 
 
             var reponse = new
@@ -97,7 +97,7 @@ namespace AspNetCoreApi.Controllers
 
         //}
 
-        private string GenerateIdToken(string clientId)
+        private string GenerateIdToken(string clientId, string nonce)
         {
             var tokenHandler = new JsonWebTokenHandler();
 
@@ -108,7 +108,8 @@ namespace AspNetCoreApi.Controllers
                     new Claim(JwtRegisteredClaimNames.Email, "johndoe@example.com"),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
                     new Claim(JwtRegisteredClaimNames.Aud, clientId),
-                    new Claim(JwtRegisteredClaimNames.Iss, Config.Appli_URL)
+                    new Claim(JwtRegisteredClaimNames.Iss, Config.Appli_URL),
+                    new Claim(JwtRegisteredClaimNames.Nonce, nonce)
                 };
 
             var rsaSecurityKey = new RsaSecurityKey(VouteClefRSA.RSAParameters)

@@ -45,7 +45,7 @@ namespace AspNetCoreRazor
                 options.ClientId = "AspNetCoreApi_clientId"; //  Configuration["Authentication:OIDC:ClientId"];
                 options.ClientSecret = "AspNetCoreApi_secret"; // Configuration["Authentication:OIDC:ClientSecret"];
                 options.ResponseType = "code"; // Utilisation du flux de code d'autorisation
-                options.SaveTokens = false; // true; // Enregistrer les jetons pour une utilisation ultérieure
+                options.SaveTokens = true; // true; // Enregistrer les jetons pour une utilisation ultérieure
 
                 //options.Configuration = new Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectConfiguration
                 //{

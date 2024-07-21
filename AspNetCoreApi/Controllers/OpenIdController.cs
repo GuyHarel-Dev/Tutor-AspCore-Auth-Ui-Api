@@ -15,6 +15,7 @@ namespace AspNetCoreApi.Controllers
     {
         private readonly ILogger<OpenIdController> logger;
 
+        private static string StaticNonce = string.Empty;
 
 
         public OpenIdController(ILogger<OpenIdController> logger)

@@ -25,6 +25,8 @@ namespace AspNetCoreApi.Controllers
             var xClientSKU = queryParameters["x-client-SKU"].ToString();
             var xClientVer = queryParameters["x-client-ver"].ToString();
 
+            StaticNonce = nonce;
+
             // Validate required parameters
             if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(redirectUri) || string.IsNullOrEmpty(responseType) ||
                 string.IsNullOrEmpty(scope) || string.IsNullOrEmpty(codeChallenge) || string.IsNullOrEmpty(codeChallengeMethod))
